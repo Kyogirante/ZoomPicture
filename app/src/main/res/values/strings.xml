@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">ZoomPicture</string>
+
+    <string name="z_confirm">确定</string>
+
+    <string name="z_toast_error">貌似出错了呢~</string>
+    <string name="z_toast_no_select_pic">还没有选图呢~</string>
+
+    <!-- 首页 -->
+    <string name="z_home_zoom_picture">缩放图片</string>
+
+    <!-- 缩放图片-->
+    <string name="z_zoom_choose_pic_tip">点击图片选择需要压缩的图片</string>
+    <string name="z_zoom_picture_not_choose">暂未选择图片</string>
+    <string name="z_zoom_picture_dir">地址目录：%s</string>
+    <string name="z_zoom_picture_info">照片信息：</string>
+    <string name="z_zoom_picture_height">高</string>
+    <string name="z_zoom_picture_width">宽</string>
+    <string name="z_zoom_picture_fixed_l_w">固定长宽比</string>
+    <string name="z_zoom_picture_config">配色</string>
+    <string name="z_zoom_picture_quantity">压缩质量(百分比)</string>
+    <string name="z_zoom_picture_quantity_tip">取值范围[0~100]</string>
+
+    <string name="z_zoom_picture_type">照片类型</string>
+
+</resources>
