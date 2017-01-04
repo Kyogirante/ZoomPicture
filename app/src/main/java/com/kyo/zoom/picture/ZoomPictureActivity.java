@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kyo.zoom.R;
+import com.kyo.zoom.ZoomUriTransfer;
 import com.kyo.zoom.picture.adapter.ZoomPictureSpinnerAdapter;
 
 import java.io.File;
@@ -31,9 +32,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import me.nereo.multi_image_selector.MultiImageSelector;
-import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
 /**
  * Created by wangkegang on 2016/10/19 .
@@ -63,7 +61,7 @@ public class ZoomPictureActivity extends AppCompatActivity implements View.OnCli
     private final int DELAY_TIME = 500;
 
     private ImageView mPicImageView;
-    private TextView mPicDictTextView;
+    private TextView mPicDirTextView;
     private TextView mPicInfoTextView;
     private EditText mPicHeightEditText;
     private EditText mPicWidthEditText;
@@ -180,9 +178,9 @@ public class ZoomPictureActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if(id == R.id.pic_image_show) {
+        if(id == R.id.zoom_picture_view) {
             choosePicture();
-        } else if(id == R.id.pic_image_zoom_confirm) {
+        } else if(id == R.id.zoom_picture_confirm) {
             savePicture();
         }
     }
@@ -232,48 +230,49 @@ public class ZoomPictureActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE_CHOOSE_PIC){
-            if(resultCode == RESULT_OK){
-                List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                if(path == null || path.isEmpty()) {
-                    showErrorToast();
-                }
-                String url = path.get(0);
-                if(TextUtils.isDigitsOnly(url)) {
-                    showErrorToast();
-                }
+        if(requestCode == REQUEST_CODE_CHOOSE_PIC && resultCode == RESULT_OK){
+            Uri uri = data.getData();
+            if(uri == null) {
+                showErrorToast();
+            }
 
+            String path = ZoomUriTransfer.transferUriToPath(this, uri);
 
-                Bitmap bitmap = BitmapFactory.decodeFile(url);
-                if(bitmap != null) {
-                    isImageSetted = true;
-                    mPictureDirectory = url;
+            if(TextUtils.isEmpty(path)) {
+                showErrorToast();
+            }
 
-                    mPicDictTextView.setText(getString(R.string.z_zoom_picture_dir, url));
-                    mPicInfoTextView.setVisibility(View.VISIBLE);
-                    mPicInfoTextView.setText(getPictureInfo(url));
-                    mPicHeightEditText.setText(String.valueOf((int)mPictureHeight));
-                    mPicWidthEditText.setText(String.valueOf((int)mPictureWidth));
-                    mPicQuantityEditText.setText(mPictureQuantity + "");
-                    mPicImageView.setImageBitmap(bitmap);
-                } else {
-                    showErrorToast();
-                }
+            String info = getPictureInfo(path);
+
+            Bitmap bitmap = BitmapFactory.decodeFile(path);
+            if(bitmap != null) {
+                isImageSetted = true;
+                mPictureDirectory = path;
+
+                mPicDirTextView.setText(getString(R.string.z_zoom_picture_dir, path));
+                mPicInfoTextView.setVisibility(View.VISIBLE);
+                mPicInfoTextView.setText(info);
+                mPicHeightEditText.setText(String.valueOf((int)mPictureHeight));
+                mPicWidthEditText.setText(String.valueOf((int)mPictureWidth));
+                mPicQuantityEditText.setText(mPictureQuantity + "");
+                mPicImageView.setImageBitmap(bitmap);
+            } else {
+                showErrorToast();
             }
         }
     }
 
 
     private void initView() {
-        mPicImageView = (ImageView) findViewById(R.id.pic_image_show);
-        mPicDictTextView = (TextView) findViewById(R.id.pic_image_directory);
-        mPicInfoTextView = (TextView) findViewById(R.id.pic_image_info);
-        mPicHeightEditText = (EditText) findViewById(R.id.pic_image_height_et);
-        mPicWidthEditText = (EditText) findViewById(R.id.pic_image_width_et);
-        mPicLenWidFixedSwitch = (Switch) findViewById(R.id.pic_image_fixed_l_w_switch);
-        mPicConfigSpinner = (Spinner) findViewById(R.id.pic_image_spinner);
-        mPicQuantityEditText = (EditText) findViewById(R.id.pic_image_quantity);
-        mPicConfirmTextView = (TextView) findViewById(R.id.pic_image_zoom_confirm);
+        mPicImageView = (ImageView) findViewById(R.id.zoom_picture_view);
+        mPicDirTextView = (TextView) findViewById(R.id.zoom_picture_directory);
+        mPicInfoTextView = (TextView) findViewById(R.id.zoom_picture_info);
+        mPicHeightEditText = (EditText) findViewById(R.id.zoom_picture_height_edit);
+        mPicWidthEditText = (EditText) findViewById(R.id.zoom_picture_width_edit);
+        mPicLenWidFixedSwitch = (Switch) findViewById(R.id.zoom_picture_fixed_l_w_switch);
+        mPicConfigSpinner = (Spinner) findViewById(R.id.zoom_picture_config_spinner);
+        mPicQuantityEditText = (EditText) findViewById(R.id.zoom_picture_quantity_edit);
+        mPicConfirmTextView = (TextView) findViewById(R.id.zoom_picture_confirm);
 
         mSpinnerAdapter = new ZoomPictureSpinnerAdapter(this, R.layout.view_spinner_item, getResources().getStringArray(R.array.zoom_image_config));
 
@@ -343,13 +342,13 @@ public class ZoomPictureActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
-    private String getPictureInfo(String url) {
+    private String getPictureInfo(String path) {
         StringBuilder sb = new StringBuilder();
         sb.append(getString(R.string.z_zoom_picture_info));
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(url, options);
+        BitmapFactory.decodeFile(path, options);
 
         mPictureHeight = options.outHeight;
         mPictureWidth = options.outWidth;
@@ -378,6 +377,7 @@ public class ZoomPictureActivity extends AppCompatActivity implements View.OnCli
         Toast.makeText(this, R.string.z_toast_error, Toast.LENGTH_SHORT).show();
     }
 
+
     private void delayedHandle(int code, int delay) {
         mHandler.removeCallbacksAndMessages(null);
 
@@ -385,10 +385,10 @@ public class ZoomPictureActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void choosePicture() {
-        MultiImageSelector.create(this)
-                .count(1)
-                .multi()
-                .start(this, REQUEST_CODE_CHOOSE_PIC);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "选择图片"), REQUEST_CODE_CHOOSE_PIC);
     }
 
     private void savePicture() {

@@ -18,4 +18,13 @@
         android:gravity="center"
         android:background="@drawable/zoom_full_corners"
         android:text="@string/z_home_zoom_picture"/>
+
+    <TextView
+        android:id="@+id/home_to_zoom_gif_page_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/z_common_padding"
+        android:gravity="center"
+        android:background="@drawable/zoom_full_corners"
+        android:text="@string/z_home_zoom_gif"/>
 </LinearLayout>

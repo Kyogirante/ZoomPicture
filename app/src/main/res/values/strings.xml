@@ -8,6 +8,7 @@
 
     <!-- 首页 -->
     <string name="z_home_zoom_picture">缩放图片</string>
+    <string name="z_home_zoom_gif">缩放动图</string>
 
     <!-- 缩放图片-->
     <string name="z_zoom_choose_pic_tip">点击图片选择需要压缩的图片</string>
@@ -20,7 +21,9 @@
     <string name="z_zoom_picture_config">配色</string>
     <string name="z_zoom_picture_quantity">压缩质量(百分比)</string>
     <string name="z_zoom_picture_quantity_tip">取值范围[0~100]</string>
-
     <string name="z_zoom_picture_type">照片类型</string>
 
+
+    <!-- 缩放GIF -->
+    <string name="z_zoom_choose_gif_tip">点击图片选择需要压缩的动图</string>
 </resources>

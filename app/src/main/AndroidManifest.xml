@@ -29,23 +29,16 @@
         android:theme="@style/AppTheme"/>
 
         <activity
-            android:name="com.kyo.zoom.Demo"
+            android:name=".gif.ZoomGifActivity"
             android:configChanges="orientation|screenSize|keyboard|mcc|mnc|locale|keyboardHidden|uiMode|fontScale"
             android:screenOrientation="portrait"
-            android:label="对外暴露"
+            android:label="@string/z_home_zoom_gif"
             android:supportsRtl="true"
-            android:taskAffinity="com.kyo.zoom"
-            android:allowTaskReparenting="true"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="com.didi.bus.gongjiao.debug" />
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme"/>
 
         <activity
-            android:configChanges="orientation|screenSize"
-            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity" />
+            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize"/>
     </application>
 
 </manifest>
